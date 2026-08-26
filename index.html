@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="브라우저 안에서 SVG, PNG, JPG, WebP 이미지를 안전하게 변환합니다.">
+  <title>FormatDrop — 이미지 포맷 변환기</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="FormatDrop 홈">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v5h5M4 7v13a1 1 0 0 0 1 1h10"/></svg>
+      </span>
+      <span>Format<span>Drop</span></span>
+    </a>
+    <div class="privacy-pill"><span></span> 파일은 외부로 전송되지 않아요</div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="eyebrow">FAST · PRIVATE · FREE</p>
+      <h1>이미지 포맷을<br><em>가볍게 바꾸세요.</em></h1>
+      <p class="hero-copy">SVG를 PNG로, PNG를 WebP로. 설치도 업로드도 없이<br class="desktop-only"> 브라우저에서 바로 변환합니다.</p>
+      <div class="format-flow" aria-label="지원하는 변환 포맷">
+        <span>SVG</span><b>→</b><span>PNG</span><b>·</b><span>JPG</span><b>·</b><span>WEBP</span>
+      </div>
+    </section>
+
+    <section class="workspace" aria-label="이미지 변환 작업 영역">
+      <div class="drop-zone" id="dropZone" tabindex="0" role="button" aria-label="파일 선택 또는 드래그 앤 드롭">
+        <input id="fileInput" type="file" multiple accept=".svg,.png,.jpg,.jpeg,.webp,.gif,.bmp,.avif,image/*">
+        <div class="drop-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 14v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5"/></svg>
+        </div>
+        <h2>파일을 여기에 놓으세요</h2>
+        <p>또는 <strong>내 컴퓨터에서 선택</strong></p>
+        <small>SVG, PNG, JPG, WebP, GIF, BMP, AVIF · 여러 파일 가능</small>
+      </div>
+
+      <div class="converter" id="converter" hidden>
+        <div class="queue-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="section-label">FILES</p>
+              <h2>변환할 파일 <span id="fileCount">0</span></h2>
+            </div>
+            <button class="text-button" id="addFilesButton" type="button">+ 파일 추가</button>
+          </div>
+          <div class="file-list" id="fileList"></div>
+        </div>
+
+        <aside class="settings-panel">
+          <div class="panel-heading compact">
+            <div>
+              <p class="section-label">SETTINGS</p>
+              <h2>출력 설정</h2>
+            </div>
+          </div>
+
+          <label class="field-label" for="formatSelect">변환 포맷</label>
+          <div class="format-options" id="formatOptions">
+            <button type="button" data-format="image/png" class="active">PNG</button>
+            <button type="button" data-format="image/jpeg">JPG</button>
+            <button type="button" data-format="image/webp">WEBP</button>
+          </div>
+
+          <div class="setting-row">
+            <label for="scaleSelect">이미지 배율</label>
+            <select id="scaleSelect">
+              <option value="1">기준 화질 (1×)</option>
+              <option value="2">2×</option>
+              <option value="3">3×</option>
+              <option value="4">4×</option>
+            </select>
+            <p class="scale-note">SVG는 선명도를 위해 1×부터 원본 좌표의 4배 픽셀로 출력됩니다.</p>
+          </div>
+
+          <div class="setting-row" id="qualityRow" hidden>
+            <div class="range-label"><label for="qualityRange">품질</label><output id="qualityValue">92%</output></div>
+            <input id="qualityRange" type="range" min="40" max="100" value="92">
+          </div>
+
+          <div class="setting-row" id="backgroundRow" hidden>
+            <label for="backgroundColor">투명 영역 배경</label>
+            <div class="color-control">
+              <input id="backgroundColor" type="color" value="#ffffff">
+              <span id="backgroundValue">#FFFFFF</span>
+            </div>
+          </div>
+
+          <button class="primary-button" id="convertButton" type="button">
+            <span>모두 변환하기</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg>
+          </button>
+          <button class="secondary-button" id="downloadAllButton" type="button" hidden>변환된 파일 모두 다운로드</button>
+          <p class="local-note"><svg viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.6 2.8 8.1 7 10 4.2-1.9 7-5.4 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg> 모든 처리는 이 기기 안에서만 이루어집니다.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="features">
+      <article><span>01</span><div><h3>완전한 로컬 처리</h3><p>파일이 서버로 올라가지 않아 빠르고 안전합니다.</p></div></article>
+      <article><span>02</span><div><h3>선명한 SVG 렌더링</h3><p>SVG는 기본 4배 픽셀 밀도로 또렷하게 출력합니다.</p></div></article>
+      <article><span>03</span><div><h3>한 번에 여러 장</h3><p>다수의 이미지를 같은 설정으로 일괄 변환합니다.</p></div></article>
+    </section>
+  </main>
+
+  <footer><span>FormatDrop</span><p>작고 빠른 브라우저 이미지 도구</p></footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
