@@ -1,2 +1,2 @@
-98923ca4ba749100cd71d71de3c7e78663a8a0c7bc23d84cb90d81acb6329a04  FormatDrop-1.0.0.exe
-5f1caa2fc11682fd616cdec5f3aac2c1b71c54ea0f7e5d18fb6a4692fcf37bba  FormatDrop-1.0.0-windows.zip
+7dda9efa80c4b6b2926209b9a351d6f8f18b083e602601b8a0f998232feb8c4d  FormatDrop-1.0.1.exe
+e2173aaf25e37f2c8b9a0c1e97af8ba6fc253942b9459644c1b53c26b8781d98  FormatDrop-1.0.1-windows.zip

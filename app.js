@@ -38,6 +38,7 @@ const PDF_ASSET_OPTIONS = {
   stopAtErrors: false
 };
 const state = { files: [], outputType: 'image/png', busy: false, combinedPdf: null };
+let documentDragDepth = 0;
 const icons = {
   trash: '<svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3m3 0-1 13H7L6 7m4 4v5m4-5v5"/></svg>',
   download: '<svg viewBox="0 0 24 24"><path d="M12 4v11m0 0 4-4m-4 4-4-4M5 20h14"/></svg>',
@@ -296,7 +297,10 @@ function updateSettingsView() {
   els.outputHint.textContent = pdfOutput
     ? '이미지는 목록 순서대로 하나의 다중 페이지 PDF에 들어갑니다.'
     : 'PDF는 페이지마다 별도의 이미지로 변환되며 ZIP으로 한 번에 받을 수 있습니다.';
-  els.queueNote.hidden = !pdfOutput;
+  els.queueNote.hidden = false;
+  els.queueNote.textContent = pdfOutput
+    ? '파일을 여기에 드래그해 추가하세요. 현재 목록 순서가 PDF 페이지 순서가 됩니다.'
+    : '파일을 여기에 드래그하면 현재 목록에 계속 추가됩니다.';
   if (state.combinedPdf) {
     els.downloadAllButton.textContent = `PDF 다운로드 · ${prettyBytes(state.combinedPdf.blob.size)}`;
   } else {
@@ -607,15 +611,56 @@ els.dropZone.addEventListener('keydown', event => {
 els.fileInput.addEventListener('change', event => addFiles(event.target.files));
 els.addFilesButton.addEventListener('click', () => els.fileInput.click());
 
+function hasDraggedFiles(event) {
+  return Array.from(event.dataTransfer?.types || []).includes('Files');
+}
+
+function clearDocumentDragState() {
+  documentDragDepth = 0;
+  els.converter.classList.remove('dragging-files');
+}
+
 ['dragenter', 'dragover'].forEach(type => els.dropZone.addEventListener(type, event => {
   event.preventDefault();
+  event.stopPropagation();
   els.dropZone.classList.add('dragging');
 }));
 ['dragleave', 'drop'].forEach(type => els.dropZone.addEventListener(type, event => {
   event.preventDefault();
+  event.stopPropagation();
   els.dropZone.classList.remove('dragging');
 }));
 els.dropZone.addEventListener('drop', event => addFiles(event.dataTransfer.files));
+
+document.addEventListener('dragenter', event => {
+  if (!state.files.length || !hasDraggedFiles(event)) return;
+  event.preventDefault();
+  documentDragDepth += 1;
+  els.converter.classList.add('dragging-files');
+});
+document.addEventListener('dragover', event => {
+  if (!state.files.length || !hasDraggedFiles(event)) return;
+  event.preventDefault();
+  event.dataTransfer.dropEffect = 'copy';
+  els.converter.classList.add('dragging-files');
+});
+document.addEventListener('dragleave', event => {
+  if (!state.files.length || !hasDraggedFiles(event)) return;
+  documentDragDepth = Math.max(0, documentDragDepth - 1);
+  if (!documentDragDepth) els.converter.classList.remove('dragging-files');
+});
+document.addEventListener('drop', event => {
+  if (!state.files.length || !hasDraggedFiles(event)) return;
+  event.preventDefault();
+  clearDocumentDragState();
+  if (state.busy) {
+    showToast('변환이 끝난 뒤 파일을 추가해 주세요.');
+    return;
+  }
+  addFiles(event.dataTransfer.files);
+});
+document.addEventListener('dragend', clearDocumentDragState);
+window.addEventListener('blur', clearDocumentDragState);
 
 els.formatOptions.addEventListener('click', event => {
   const button = event.target.closest('[data-format]');

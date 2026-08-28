@@ -16,15 +16,15 @@ using System.Windows.Forms;
 [assembly: AssemblyCompany("FormatDrop")]
 [assembly: AssemblyProduct("FormatDrop")]
 [assembly: AssemblyCopyright("Copyright (c) 2026 FormatDrop")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
-[assembly: AssemblyInformationalVersion("1.0.0")]
+[assembly: AssemblyVersion("1.0.1.0")]
+[assembly: AssemblyFileVersion("1.0.1.0")]
+[assembly: AssemblyInformationalVersion("1.0.1")]
 
 namespace FormatDropLauncher
 {
     internal static class Program
     {
-        internal const string Version = "1.0.0";
+        internal const string Version = "1.0.1";
 
         [STAThread]
         private static void Main(string[] args)

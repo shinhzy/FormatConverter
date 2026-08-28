@@ -1,7 +1,7 @@
-FormatDrop 1.0.0
+FormatDrop 1.0.1
 ================
 
-1. FormatDrop-1.0.0.exe를 더블클릭합니다.
+1. FormatDrop-1.0.1.exe를 더블클릭합니다.
 2. 잠시 후 기본 브라우저에서 FormatDrop이 자동으로 열립니다.
 3. FormatDrop 제어 창을 닫으면 로컬 서버와 앱이 함께 종료됩니다.
 
